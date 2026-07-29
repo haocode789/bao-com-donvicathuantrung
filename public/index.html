@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Báo Cơm Nội Bộ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-orange-50/40 min-h-screen text-slate-800 pb-12">
+
+    <!-- Màn hình Đăng Nhập -->
+    <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-orange-100">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto shadow-lg shadow-orange-500/30 mb-3">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-800">Báo Cơm Đơn Vị</h1>
+                <p class="text-xs text-slate-500 mt-1">Đăng nhập hệ thống quản lý suất ăn</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Tên đăng nhập</label>
+                    <input type="text" id="login-username" required placeholder="admin / bep / nv_an" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Mật khẩu</label>
+                    <input type="password" id="login-password" required value="123456" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/25 transition duration-200">
+                    Đăng Nhập
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Màn hình Chính App -->
+    <div id="app-screen" class="hidden max-w-4xl mx-auto p-4 md:p-6">
+        <div class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-orange-100 mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 font-bold flex items-center justify-center text-sm" id="user-avatar">U</div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm" id="user-fullname">Họ và Tên</h3>
+                    <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700" id="user-role">MEMBER</span>
+                </div>
+            </div>
+            <button onclick="handleLogout()" class="text-xs font-semibold text-slate-400 hover:text-red-500 px-3 py-2 rounded-lg transition">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> Đăng xuất
+            </button>
+        </div>
+
+        <div class="relative bg-cover bg-center h-48 rounded-3xl shadow-xl overflow-hidden mb-6 flex items-end p-6" 
+             style="background-image: linear-gradient(to top, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.1)), url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=80');">
+            <div>
+                <span class="bg-amber-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Thực Đơn Tươi Sáng</span>
+                <h2 class="text-2xl font-black text-white">Chúc Bạn Một Bữa Ăn Ngon Miệng!</h2>
+                <p class="text-slate-300 text-xs mt-1">Đăng ký báo cơm chính xác giúp bộ phận bếp phục vụ tốt nhất.</p>
+            </div>
+        </div>
+
+        <!-- VIEW MEMBER: BÁO CƠM -->
+        <div id="view-member" class="space-y-4">
+            <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-orange-100 shadow-sm">
+                <span class="font-bold text-slate-700 text-sm"><i class="fa-solid fa-calendar-day text-orange-500 mr-2"></i>Ngày chọn:</span>
+                <input type="date" id="selected-date" onchange="loadMemberMeals()" class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="meal-cards-container"></div>
+        </div>
+
+        <!-- VIEW COOK: THỐNG KÊ CHO BẾP -->
+        <div id="view-cook" class="hidden space-y-4">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-bold text-slate-800 text-lg"><i class="fa-solid fa-kitchen-set text-orange-500 mr-2"></i>Tổng Số Lượng Suất Ăn</h2>
+                    <input type="date" id="cook-date" onchange="loadCookSummary()" class="border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-700">
+                </div>
+                <div id="cook-summary-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+        </div>
+
+        <!-- VIEW ADMIN: PHÂN CÔNG LỊCH TRỰC -->
+        <div id="view-admin" class="hidden space-y-4">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100">
+                <h2 class="font-bold text-slate-800 text-lg mb-4"><i class="fa-solid fa-user-shield text-orange-500 mr-2"></i>Phân Công Lịch Trực & Tự Động Báo Cơm</h2>
+                <form onsubmit="handleAssignDuty(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-1 block">Chọn Nhân Sự</label>
+                        <select id="admin-user-select" required class="w-full px-3 py-2.5 border rounded-xl text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-1 block">Ngày Trực</label>
+                        <input type="date" id="admin-duty-date" required class="w-full px-3 py-2.5 border rounded-xl text-sm">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl text-sm shadow">
+                            Phân Công & Báo Cơm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        const MEAL_TYPES = {
+            BREAKFAST: { name: 'Bữa Sáng', time: '07:00 AM', icon: 'fa-sun', color: 'text-amber-500' },
+            LUNCH: { name: 'Bữa Trưa', time: '09:00 AM', icon: 'fa-utensils', color: 'text-orange-500' },
+            DINNER: { name: 'Bữa Tối', time: '03:00 PM', icon: 'fa-moon', color: 'text-indigo-500' }
+        };
+
+        document.getElementById('selected-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('cook-date').value = new Date().toISOString().split('T')[0];
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error);
+
+                currentUser = data;
+                initApp();
+            } catch (err) {
+                alert(err.message);
+            }
+        }
+
+        function initApp() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+
+            document.getElementById('user-fullname').innerText = currentUser.full_name;
+            document.getElementById('user-role').innerText = currentUser.role;
+            document.getElementById('user-avatar').innerText = currentUser.full_name.charAt(0);
+
+            if (currentUser.role === 'COOK') {
+                document.getElementById('view-cook').classList.remove('hidden');
+                loadCookSummary();
+            } else if (currentUser.role === 'ADMIN') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('view-cook').classList.remove('hidden');
+                loadUsersForAdmin();
+                loadCookSummary();
+                loadMemberMeals();
+            } else {
+                loadMemberMeals();
+            }
+        }
+
+        async function loadMemberMeals() {
+            const date = document.getElementById('selected-date').value;
+            const res = await fetch(`/api/meals/my-status?userId=${currentUser.id}&date=${date}`);
+            const registeredMeals = await res.json();
+
+            const container = document.getElementById('meal-cards-container');
+            container.innerHTML = '';
+
+            Object.keys(MEAL_TYPES).forEach(type => {
+                const cfg = MEAL_TYPES[type];
+                const mealData = registeredMeals.find(m => m.meal_type === type);
+                const isRegistered = mealData && mealData.status === 'REGISTERED';
+                const isDuty = mealData && mealData.is_duty_meal === 1;
+
+                container.innerHTML += `
+                    <div class="bg-white p-5 rounded-3xl border ${isRegistered ? 'border-orange-400 ring-2 ring-orange-400/20' : 'border-slate-100'} shadow-sm">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-extrabold text-slate-800 text-base">${cfg.name}</span>
+                            <i class="fa-solid ${cfg.icon} ${cfg.color} text-lg"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-3">Hạn chốt: <span class="font-semibold text-slate-600">${cfg.time}</span></p>
+                        ${isDuty ? '<span class="inline-block bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-md mb-3"><i class="fa-solid fa-shield mr-1"></i>Suất Cơm Trực</span>' : ''}
+                        
+                        <div class="flex gap-2">
+                            <button onclick="toggleMeal('${type}', 'REGISTERED')" class="flex-1 py-2.5 rounded-xl font-bold text-xs ${isRegistered ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                                Ăn Cơm
+                            </button>
+                            <button onclick="toggleMeal('${type}', 'CANCELLED')" class="flex-1 py-2.5 rounded-xl font-bold text-xs ${mealData && mealData.status === 'CANCELLED' ? 'bg-red-500 text-white' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}">
+                                Cắt Cơm
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function toggleMeal(mealType, status) {
+            const mealDate = document.getElementById('selected-date').value;
+            const res = await fetch('/api/meals/toggle', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: currentUser.id, mealDate, mealType, status })
+            });
+            const data = await res.json();
+            if (!res.ok) alert(data.error);
+            else loadMemberMeals();
+        }
+
+        async function loadCookSummary() {
+            const date = document.getElementById('cook-date').value;
+            const res = await fetch(`/api/cook/summary?date=${date}`);
+            const data = await res.json();
+
+            const container = document.getElementById('cook-summary-list');
+            container.innerHTML = '';
+
+            Object.keys(MEAL_TYPES).forEach(type => {
+                const item = data.find(d => d.meal_type === type) || { total: 0, names: 'Chưa có ai đăng ký' };
+                const cfg = MEAL_TYPES[type];
+                container.innerHTML += `
+                    <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-700 text-sm">${cfg.name}</span>
+                            <span class="text-xl font-black text-orange-600">${item.total} suất</span>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed">${item.names ? item.names.split(',').join(', ') : ''}</p>
+                    </div>
+                `;
+            });
+        }
+
+        async function loadUsersForAdmin() {
+            const res = await fetch('/api/users');
+            const users = await res.json();
+            const select = document.getElementById('admin-user-select');
+            select.innerHTML = users.map(u => `<option value="${u.id}">${u.full_name} (@${u.username})</option>`).join('');
+        }
+
+        async function handleAssignDuty(e) {
+            e.preventDefault();
+            const userId = document.getElementById('admin-user-select').value;
+            const dutyDate = document.getElementById('admin-duty-date').value;
+
+            const res = await fetch('/api/duty/assign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, dutyDate })
+            });
+            const data = await res.json();
+            alert(data.message);
+        }
+
+        function handleLogout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
