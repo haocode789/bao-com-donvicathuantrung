@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần mềm Báo Cơm - CÔNG AN XÃ THUẦN TRUNG</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .header-logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
+        .header-title {
+            color: #0b5ed7;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .header-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+        .main-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            background: #ffffff;
+        }
+        .nav-pills .nav-link {
+            color: #0b5ed7;
+            border: 1px solid #0b5ed7;
+            background-color: #ffffff;
+            margin: 0 4px;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+            color: #ffffff;
+        }
+        .btn-custom-save {
+            background-color: #198754;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 20px;
+            font-weight: 600;
+        }
+        .btn-custom-save:hover {
+            background-color: #157347;
+            color: white;
+        }
+
+        .kitchen-contact-box {
+            background: #ffffff;
+            border-top: 4px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .contact-card {
+            background-color: #fff9e6;
+            border: 1px solid #ffe8a1;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            height: 100%;
+            transition: all 0.2s ease-in-out;
+        }
+        .contact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+        }
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #ffc107;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+        .phone-link {
+            color: #d63384;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1.05rem;
+        }
+        .phone-link:hover {
+            color: #b02a37;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-4" style="max-width: 900px;">
+        
+        <!-- HEADER -->
+        <div class="header-logo-container">
+           <img src="logo.jpg" alt="Logo Công An Nhân Dân" class="header-logo">
+           <div>
+               <h2 class="header-title text-uppercase">CÔNG AN XÃ THUẦN TRUNG</h2>
+               <p class="header-subtitle">Hệ thống đăng ký và quản lý suất ăn thông minh</p>
+           </div>
+        </div>
+
+        <!-- 1. MÀN HÌNH ĐĂNG NHẬP -->
+        <div id="loginSection" class="card main-card p-4 mx-auto" style="max-width: 400px;">
+            <div class="text-center mb-3">
+                <i class="fa-solid fa-circle-user fa-3x text-primary mb-2"></i>
+                <h4 class="fw-bold">Đăng Nhập</h4>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Tên đăng nhập</label>
+                <input type="text" id="username" class="form-control" placeholder="Nhập tên đăng nhập">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu">
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+            </div>
+            <button type="button" class="btn btn-primary w-100 fw-bold py-2" onclick="login()">
+                <i class="fa-solid fa-right-to-bracket me-2"></i>Đăng Nhập
+            </button>
+        </div>
+
+        <!-- 2. MÀN HÌNH CHÍNH -->
+        <div id="mainSection" class="d-none">
+            
+            <!-- THÔNG TIN USER VÀ NÚT ĐỔI MẬT KHẨU / ĐĂNG XUẤT -->
+            <div class="card main-card p-3 mb-4 d-flex flex-row justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-circle-user fa-2x text-primary me-2"></i>
+                    <div>
+                        <span class="text-muted small d-block">Xin chào,</span>
+                        <h6 id="welcomeText" class="mb-0 fw-bold text-primary"></h6>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="fa-solid fa-key me-1"></i>Đổi mật khẩu
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="logout()">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i>Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- MENU TABS BÁO CƠM -->
+            <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold" id="pills-single-tab" data-bs-toggle="pill" data-bs-target="#pills-single" type="button">
+                        <i class="fa-regular fa-calendar-check me-1"></i> Báo Cơm Ngày
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="pills-week-tab" data-bs-toggle="pill" data-bs-target="#pills-week" type="button" onclick="initWeekMeal()">
+                        <i class="fa-regular fa-calendar-days me-1"></i> Báo Cơm Cả Tuần
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+                
+                <!-- BÁO CƠM LẺ THEO NGÀY -->
+                <div class="tab-pane fade show active" id="pills-single">
+                    <div class="card main-card p-4 mb-4">
+                        <h5 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-calendar-day me-2"></i>Báo cơm lẻ theo ngày</h5>
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">Chọn ngày báo cơm</label>
+                                <input type="date" id="mealDate" class="form-control" onchange="onSingleDateChange()">
+                                <small id="dayNameDisplay" class="text-primary fw-bold mt-1 d-block"></small>
+                            </div>
+                            <div class="col-md-7">
+                                <label class="form-label fw-semibold">Bữa ăn</label>
+                                <div class="d-flex gap-4 mt-2 flex-wrap">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="checkTrua">
+                                        <label class="form-check-label fw-semibold" for="checkTrua">☀️ Cơm Trưa</label>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="checkToi">
+                                        <label class="form-check-label fw-semibold" for="checkToi">🌙 Cơm Tối</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="button" class="btn btn-custom-save" onclick="submitMeal()">
+                                <i class="fa-solid fa-lock me-1"></i> Lưu báo cơm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BÁO CƠM CẢ TUẦN -->
+                <div class="tab-pane fade" id="pills-week">
+                    <div class="card main-card p-4 mb-4">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                            <h5 class="fw-bold mb-0 text-secondary"><i class="fa-solid fa-list-check me-2"></i>Đăng ký báo cơm trọn tuần</h5>
+                            <button type="button" class="btn btn-custom-save" onclick="submitWeekMeals()">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> Lưu toàn bộ tuần
+                            </button>
+                        </div>
+
+                        <div class="alert alert-info d-flex align-items-center justify-content-between p-2 px-3 mb-3">
+                            <span class="fw-semibold small"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Chọn nhanh cho các ngày còn lại:</span>
+                            <button type="button" class="btn btn-sm btn-primary fw-bold" onclick="toggleAllWeekMeals()">
+                                <i class="fa-solid fa-check-double me-1"></i> Báo tất cả các bữa
+                            </button>
+                        </div>
+
+                        <div id="weekDaysContainer" class="row g-3"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- QUẢN TRỊ HỆ THỐNG -->
+            <div id="adminForm" class="card main-card p-4 mb-4 border-danger border-top d-none">
+                <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-gear me-2"></i>Quản trị hệ thống</h5>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-5">
+                        <input type="text" id="newUsername" class="form-control" placeholder="Tên đăng nhập mới">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" id="newName" class="form-control" placeholder="Họ và tên">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger w-100 fw-bold" onclick="createUser()">Tạo User</button>
+                    </div>
+                </div>
+                <h6 class="fw-bold">Phân quyền xem thống kê:</h6>
+                <div id="userPermissionsList" class="list-group"></div>
+            </div>
+
+            <!-- KHU VỰC THỐNG KÊ -->
+            <div id="statsForm" class="card main-card p-4 mb-4 d-none">
+                <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-pie me-2"></i>Thống kê báo cơm</h5>
+                
+                <ul class="nav nav-tabs mb-3" id="statsTab" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active fw-bold" id="tab-daily-summary-btn" data-bs-toggle="tab" data-bs-target="#tab-daily-summary" type="button" onclick="loadDailyStats()">
+                            <i class="fa-solid fa-calendar-day me-1"></i> Suất ăn theo từng ngày
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-bold" id="tab-user-range-btn" data-bs-toggle="tab" data-bs-target="#tab-user-range" type="button" onclick="loadUserRangeStats()">
+                            <i class="fa-solid fa-user-check me-1"></i> Tra cứu theo tài khoản & Thời gian
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-bold" id="tab-detail-btn" data-bs-toggle="tab" data-bs-target="#tab-detail" type="button" onclick="loadStats()">
+                            <i class="fa-solid fa-list-ul me-1"></i> Nhật ký chi tiết
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="statsTabContent">
+                    
+                    <!-- TAB 1: THỐNG KÊ TỔNG THEO TỪNG NGÀY -->
+                    <div class="tab-pane fade show active" id="tab-daily-summary">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-primary text-center">
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>☀️ Cơm Trưa</th>
+                                        <th>🌙 Cơm Tối</th>
+                                        <th class="table-warning">Tổng cộng (Suất)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dailyStatsBody" class="text-center"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: TRA CỨU THEO KHOẢNG THỜI GIAN & TÀI KHOẢN -->
+                    <div class="tab-pane fade" id="tab-user-range">
+                        <div class="row g-2 mb-3 bg-light p-3 rounded">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Từ ngày</label>
+                                <input type="date" id="filterFromDate" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold">Đến ngày</label>
+                                <input type="date" id="filterToDate" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Tài khoản</label>
+                                <input type="text" id="filterUsername" class="form-control form-control-sm" placeholder="Nhập username (để trống nếu xem tất cả)">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary btn-sm w-100 fw-bold" onclick="loadUserRangeStats()">
+                                    <i class="fa-solid fa-filter me-1"></i> Tra cứu
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-success text-center">
+                                    <tr>
+                                        <th>Họ và tên</th>
+                                        <th>Tài khoản</th>
+                                        <th>☀️ Trưa</th>
+                                        <th>🌙 Tối</th>
+                                        <th class="table-warning">Tổng số suất</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userRangeStatsBody" class="text-center"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: NHẬT KÝ CHI TIẾT -->
+                    <div class="tab-pane fade" id="tab-detail">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Thời gian</th>
+                                        <th>Tài khoản</th>
+                                        <th class="text-center">Trưa</th>
+                                        <th class="text-center">Tối</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="statsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- LIÊN HỆ NHÀ BẾP -->
+            <div class="kitchen-contact-box mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0">
+                        <i class="fa-solid fa-phone-volume text-warning me-2"></i>Liên hệ Nhà bếp:
+                    </h6>
+                    <!-- Yêu cầu 1: Bổ sung dòng chữ Lưu ý -->
+                    <span class="text-danger fw-bold small">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>Lưu ý: Báo cơm sáng trước 8h sáng, báo cơm chiều trước 18 giờ.
+                    </span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">1</div>
+                            <div>
+                                <div class="small text-muted fw-bold">Chị Phạm Thị Hương</div>
+                                <a href="tel:0359636797" class="phone-link">0359.636.797</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">2</div>
+                            <div>
+                                <div class="small text-muted fw-bold">Chị Nguyễn Thị Kiều</div>
+                                <a href="tel:0984814737" class="phone-link">0984.814.737</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-card">
+                            <div class="contact-icon">3</div>
+                            <div>
+                                <div class="small text-muted fw-bold">Chị Hoàng Thị Xuân Hương</div>
+                                <a href="tel:0354628302" class="phone-link">0354.628.302</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL ĐỔI MẬT KHẨU -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-key me-2 text-primary"></i>Đổi mật khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mật khẩu hiện tại</label>
+                        <input type="password" id="oldPassword" class="form-control" placeholder="Nhập mật khẩu hiện tại">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mật khẩu mới</label>
+                        <input type="password" id="newPassword" class="form-control" placeholder="Nhập mật khẩu mới">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu mới">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary fw-bold" onclick="changePassword()">Cập nhật mật khẩu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentUser = null;
+        let isAllChecked = false;
+
+        document.getElementById('mealDate').valueAsDate = new Date();
+        updateDayNameLabel();
+
+        window.onload = function() {
+            fillSavedCredentials();
+        };
+
+        function formatDateWithDayName(dateString) {
+            if (!dateString) return '';
+            const days = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+            const [year, month, day] = dateString.split('-');
+            const d = new Date(year, month - 1, day);
+            return `${days[d.getDay()]} ngày ${day}/${month}/${year}`;
+        }
+
+        function updateDayNameLabel() {
+            const val = document.getElementById('mealDate').value;
+            if (val) {
+                document.getElementById('dayNameDisplay').innerText = formatDateWithDayName(val);
+            }
+        }
+
+        async function onSingleDateChange() {
+            updateDayNameLabel();
+            await loadUserMealForSingleDate();
+        }
+
+        async function loadUserMealForSingleDate() {
+            if (!currentUser) return;
+            const date = document.getElementById('mealDate').value;
+            const res = await fetch(`/api/get-user-meal?username=${currentUser.username}&date=${date}`);
+            const data = await res.json();
+            if (data.success) {
+                document.getElementById('checkTrua').checked = data.trua;
+                document.getElementById('checkToi').checked = data.toi;
+            }
+        }
+
+        function fillSavedCredentials() {
+            const savedUser = localStorage.getItem('saved_username');
+            const savedPass = localStorage.getItem('saved_password');
+            if (savedUser && savedPass) {
+                document.getElementById('username').value = savedUser;
+                document.getElementById('password').value = savedPass;
+                document.getElementById('rememberMe').checked = true;
+            }
+        }
+
+        async function login() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const remember = document.getElementById('rememberMe').checked;
+
+            if (!u || !p) {
+                alert('Vui lòng nhập tên đăng nhập và mật khẩu!');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    currentUser = data.user;
+
+                    if (remember) {
+                        localStorage.setItem('saved_username', u);
+                        localStorage.setItem('saved_password', p);
+                    } else {
+                        localStorage.removeItem('saved_username');
+                        localStorage.removeItem('saved_password');
+                    }
+
+                    document.getElementById('loginSection').classList.add('d-none');
+                    document.getElementById('mainSection').classList.remove('d-none');
+                    document.getElementById('welcomeText').innerText = currentUser.name;
+
+                    loadUserMealForSingleDate();
+
+                    if (currentUser.canViewStats) {
+                        document.getElementById('statsForm').classList.remove('d-none');
+                        loadDailyStats();
+                    } else {
+                        document.getElementById('statsForm').classList.add('d-none');
+                    }
+
+                    if (currentUser.role === 'admin') {
+                        document.getElementById('adminForm').classList.remove('d-none');
+                        loadUserPermissions();
+                    } else {
+                        document.getElementById('adminForm').classList.add('d-none');
+                    }
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert('Có lỗi kết nối đến Server!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            location.reload();
+        }
+
+        async function changePassword() {
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                alert('Vui lòng điền đầy đủ các thông tin!');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                alert('Mật khẩu mới và mật khẩu xác nhận không trùng khớp!');
+                return;
+            }
+
+            const res = await fetch('/api/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser.username, oldPassword, newPassword })
+            });
+
+            const data = await res.json();
+            alert(data.message);
+
+            if (data.success) {
+                document.getElementById('oldPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                
+                const modalElem = document.getElementById('changePasswordModal');
+                const modal = bootstrap.Modal.getInstance(modalElem);
+                modal.hide();
+
+                if (localStorage.getItem('saved_username') === currentUser.username) {
+                    localStorage.setItem('saved_password', newPassword);
+                }
+            }
+        }
+
+        async function submitMeal() {
+            const date = document.getElementById('mealDate').value;
+            const trua = document.getElementById('checkTrua').checked;
+            const toi = document.getElementById('checkToi').checked;
+
+            const res = await fetch('/api/register-meal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser.username, date, trua, toi })
+            });
+            const data = await res.json();
+            
+            alert(data.message);
+
+            if (data.success && currentUser.canViewStats) {
+                loadDailyStats();
+            }
+        }
+
+        // Yêu cầu 2: Khóa không cho chọn các ngày quá khứ trong tuần
+        async function initWeekMeal() {
+            const container = document.getElementById('weekDaysContainer');
+            container.innerHTML = '';
+
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            
+            const currentDay = now.getDay();
+            const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+            
+            const monday = new Date(now);
+            monday.setDate(now.getDate() + distanceToMonday);
+
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(monday);
+                dayDate.setDate(monday.getDate() + i);
+
+                const yyyy = dayDate.getFullYear();
+                const mm = String(dayDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(dayDate.getDate()).padStart(2, '0');
+                const dateStr = `${yyyy}-${mm}-${dd}`;
+                const formattedText = formatDateWithDayName(dateStr);
+
+                // Kiểm tra ngày quá khứ
+                const isPast = dateStr < todayStr;
+
+                const res = await fetch(`/api/get-user-meal?username=${currentUser.username}&date=${dateStr}`);
+                const mealData = await res.json();
+
+                const col = document.createElement('div');
+                col.className = 'col-md-6';
+                col.innerHTML = `
+                    <div class="card border p-3 ${isPast ? 'bg-light text-muted' : 'bg-white'} shadow-sm">
+                        <div class="fw-bold ${isPast ? 'text-secondary' : 'text-primary'} mb-2">
+                            ${formattedText} ${isPast ? '<span class="badge bg-secondary ms-1">Đã qua</span>' : ''}
+                        </div>
+                        <div class="d-flex gap-4 flex-wrap">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input week-trua" type="checkbox" id="trua_${dateStr}" data-date="${dateStr}" ${mealData.trua ? 'checked' : ''} ${isPast ? 'disabled' : ''}>
+                                <label class="form-check-label" for="trua_${dateStr}">☀️ Trưa</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input week-toi" type="checkbox" id="toi_${dateStr}" data-date="${dateStr}" ${mealData.toi ? 'checked' : ''} ${isPast ? 'disabled' : ''}>
+                                <label class="form-check-label" for="toi_${dateStr}">🌙 Tối</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            }
+        }
+
+        // Báo tất cả các bữa (chỉ tác dụng lên các ngày chưa qua)
+        function toggleAllWeekMeals() {
+            isAllChecked = !isAllChecked;
+            document.querySelectorAll('.week-trua:not([disabled])').forEach(cb => cb.checked = isAllChecked);
+            document.querySelectorAll('.week-toi:not([disabled])').forEach(cb => cb.checked = isAllChecked);
+        }
+
+        async function submitWeekMeals() {
+            // Chỉ lấy các checkbox không bị disabled (các ngày hôm nay hoặc tương lai)
+            const truaCheckboxes = document.querySelectorAll('.week-trua:not([disabled])');
+
+            for (const truaBox of truaCheckboxes) {
+                const date = truaBox.getAttribute('data-date');
+                const trua = truaBox.checked;
+                const toi = document.getElementById(`toi_${date}`).checked;
+
+                await fetch('/api/register-meal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser.username, date, trua, toi })
+                });
+            }
+
+            alert('Báo cơm thành công rồi nha');
+            
+            if (currentUser.canViewStats) {
+                loadDailyStats();
+            }
+        }
+
+        async function loadDailyStats() {
+            const res = await fetch('/api/stats/daily');
+            const data = await res.json();
+            const tbody = document.getElementById('dailyStatsBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-bold text-start">${formatDateWithDayName(item.date)}</td>
+                    <td><span class="badge bg-success">${item.total_trua}</span></td>
+                    <td><span class="badge bg-primary">${item.total_toi}</span></td>
+                    <td class="fw-bold text-danger fs-6">${item.total_day}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadUserRangeStats() {
+            const fromDate = document.getElementById('filterFromDate').value;
+            const toDate = document.getElementById('filterToDate').value;
+            const username = document.getElementById('filterUsername').value.trim();
+
+            const params = new URLSearchParams({ fromDate, toDate, username });
+            const res = await fetch(`/api/stats/user-range?${params.toString()}`);
+            const data = await res.json();
+
+            const tbody = document.getElementById('userRangeStatsBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-muted">Không tìm thấy dữ liệu phù hợp</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-bold text-start">${item.name || 'N/A'}</td>
+                    <td class="text-start">${item.username}</td>
+                    <td>${item.total_trua}</td>
+                    <td>${item.total_toi}</td>
+                    <td class="fw-bold text-danger fs-6">${item.grand_total}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadStats() {
+            const res = await fetch('/api/meals');
+            const data = await res.json();
+            const tbody = document.getElementById('statsTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-bold text-secondary">${formatDateWithDayName(item.date)}</td>
+                    <td>${item.username}</td>
+                    <td class="text-center">${item.trua ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-light text-muted">Không</span>'}</td>
+                    <td class="text-center">${item.toi ? '<span class="badge bg-primary">Có</span>' : '<span class="badge bg-light text-muted">Không</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function createUser() {
+            const u = document.getElementById('newUsername').value;
+            const n = document.getElementById('newName').value;
+            const res = await fetch('/api/admin/create-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, name: n })
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (data.success) {
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newName').value = '';
+                loadUserPermissions();
+            }
+        }
+
+        async function loadUserPermissions() {
+            const res = await fetch('/api/admin/users');
+            const users = await res.json();
+            const container = document.getElementById('userPermissionsList');
+            container.innerHTML = '';
+
+            users.forEach(u => {
+                if (u.role === 'admin') return;
+                const item = document.createElement('div');
+                item.className = 'list-group-item d-flex justify-content-between align-items-center';
+                item.innerHTML = `
+                    <span><b>${u.name}</b> (${u.username})</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" ${u.canViewStats ? 'checked' : ''} onchange="togglePermission('${u.username}', this.checked)">
+                        <label class="form-check-label">Cho phép xem thống kê</label>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function togglePermission(username, canViewStats) {
+            await fetch('/api/admin/toggle-stats-permission', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, canViewStats })
+            });
+        }
+    </script>
+</body>
+</html>
